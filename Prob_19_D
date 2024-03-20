@@ -1,0 +1,27 @@
+import numpy as np
+import time
+# Define the matrix A
+A = np.array([[1, 1, 0],
+              [-1, 0, 1],
+             [0, 1, -1],
+             [1, 1, -1]])
+
+# Compute the SVD
+start_time = time.time()
+U, S, Vt = np.linalg.svd(A)
+S = np.vstack((np.diag(S), np.zeros((1, S.shape[0]))))
+
+reconstructed_A = np.dot(U, np.dot(S, Vt))
+end_time = time.time()
+time_taken = end_time - start_time
+print("U:")
+print(U)
+print("Singular Values:")
+print(S)
+print("Vt (Transpose of V):")
+print(Vt)
+print("Original Matrix A:")
+print(A)
+print("Reconstructed Matrix A:")
+print(reconstructed_A)
+print("Time taken: {:.6f} seconds".format(time_taken))

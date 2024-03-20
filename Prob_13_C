@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <gsl/gsl_linalg.h>
+
+int main(void) {
+    // Define the matrix A
+    double data[] = {10.0, 5.0, 0.0, 0.0,
+                     5.0, 10.0, -4.0, 0.0,
+                     0.0, -4.0, 8.0, -1.0,
+                     0.0, 0.0, -1.0, 5.0};
+    gsl_matrix_view m = gsl_matrix_view_array(data, 4, 4);
+
+    // Allocate memory for permutation matrix
+    gsl_permutation *p = gsl_permutation_alloc(4);
+
+    // LU decomposition
+    int signum;
+    gsl_linalg_LU_decomp(&m.matrix, p, &signum);
+
+    // Extract L and U matrices
+    gsl_matrix *L = gsl_matrix_alloc(4, 4);
+    gsl_matrix *U = gsl_matrix_alloc(4, 4);
+    gsl_matrix_set_identity(L);
+    for (size_t i = 0; i < 4; ++i) {
+        for (size_t j = 0; j < 4; ++j) {
+            if (i <= j) {
+                gsl_matrix_set(U, i, j, gsl_matrix_get(&m.matrix, i, j));
+            } else {
+                gsl_matrix_set(L, i, j, gsl_matrix_get(&m.matrix, i, j));
+            }
+        }
+    }
+
+    // Print L matrix
+    printf("Lower triangular matrix (L):\n");
+    for (size_t i = 0; i < 4; ++i) {
+        for (size_t j = 0; j < 4; ++j) {
+            printf("%8.3f ", gsl_matrix_get(L, i, j));
+        }
+        printf("\n");
+    }
+
+    // Print U matrix
+    printf("\nUpper triangular matrix (U):\n");
+    for (size_t i = 0; i < 4; ++i) {
+        for (size_t j = 0; j < 4; ++j) {
+            printf("%8.3f ", gsl_matrix_get(U, i, j));
+        }
+        printf("\n");
+    }
+
+    // Compute the product of L and U
+    gsl_matrix *LU = gsl_matrix_alloc(4, 4);
+    gsl_blas_dgemm(CblasNoTrans, CblasNoTrans, 1.0, L, U, 0.0, LU);
+
+    // Print the product of L and U
+    printf("\nProduct of L and U (LU):\n");
+    for (size_t i = 0; i < 4; ++i) {
+        for (size_t j = 0; j < 4; ++j) {
+            printf("%8.3f ", gsl_matrix_get(LU, i, j));
+        }
+        printf("\n");
+    }
+
+    // Free the memory
+    gsl_permutation_free(p);
+    gsl_matrix_free(L);
+    gsl_matrix_free(U);
+    gsl_matrix_free(LU);
+
+    return 0;
+}

@@ -1,0 +1,12 @@
+#11.B
+import numpy as np
+
+coefficients = np.array([[10, -1, 0],
+                         [-1, 10, -2],
+                         [0, -2, 10]])
+
+constants = np.array([9, 7, 6])
+
+solution = np.linalg.solve(coefficients, constants)
+print("Solution:", solution)
+

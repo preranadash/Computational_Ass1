@@ -1,0 +1,19 @@
+import numpy as np
+
+# Define matrix A
+A = np.array([[5, -2],
+              [-2, 8]])
+
+# Compute QR decomposition
+Q, R = np.linalg.qr(A)
+eigenvalues = np.linalg.eigvals(np.dot(Q, R))
+eigenvalues_eigh = np.linalg.eigh(A)[0]
+
+print("Matrix Q:")
+print(Q)
+print("\nMatrix R:")
+print(R)
+print("\nEigenvalues of matrix A using QR decomposition:")
+print(eigenvalues)
+print("\nEigenvalues using numpy.linalg.eigh:")
+print(eigenvalues_eigh)

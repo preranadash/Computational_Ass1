@@ -1,0 +1,31 @@
+#Dominant_Eigenvalue_and_Eigen_vector
+import numpy as np
+
+A = np.array([[2, -1, 0],
+              [-1, 2, -1],
+              [0, -1, 2]])
+
+x = np.array([1, 1, 1])  
+y = np.array([1, 0, 0]) 
+
+
+num_iterations = 10
+
+for i in range(num_iterations):
+    # Compute A^m and A^(m+1) terms
+    Am = np.linalg.matrix_power(A, i)
+    Am_plus_1 = np.linalg.matrix_power(A, i+1)
+    
+    numerator = np.dot(np.dot(Am_plus_1, x), y)
+    denominator = np.dot(np.dot(Am, x), y)
+    
+    # Compute the eigenvalue
+    eigenvalue = numerator / denominator
+
+print("Dominant Eigenvalue: {:.2f}".format(eigenvalue))
+print("eigen vector", np.dot(Am, x)/np.linalg.norm(np.dot(Am, x)) )
+
+eigenvalues_eigh = np.linalg.eigh(A)[0]
+
+print("\nEigenvalues using numpy.linalg.eigh:")
+print(eigenvalues_eigh)
